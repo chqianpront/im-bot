@@ -1,14 +1,14 @@
-package com.chen.imbot.api;
+package com.chen.imbot.taskflow.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("state")
-public class StateController {
-	@RequestMapping(value = "test", method = RequestMethod.GET)
-	public String test() {
-		return "test";
+@RequestMapping("/api/v1/flow")
+public class Flow {
+	@RequestMapping(value = "list", method = RequestMethod.GET)
+	public String list() {
+		return "list";
 	}
 }

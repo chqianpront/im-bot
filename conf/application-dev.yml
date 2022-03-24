@@ -1,0 +1,13 @@
+server:
+  port: 8079
+taskflow:
+  tcp:
+    port: 5080
+
+spring:
+  datasource:
+    url: jdbc:mysql://mysqlserver:3306/chen_dev?useUnicode=true&amp;characterEncoding=UTF-8
+    username: esns
+    password: minxing123
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
