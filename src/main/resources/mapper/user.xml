@@ -2,5 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.chen.imbot.usercenter.dao.UserDao">
-	<resultMap id="userResultMap" type=""></resultMap>
+	<resultMap id="userResultMap" type="com.chen.imbot.usercenter.model.User">
+		<id property="id" column="id"></id>
+		<result property="accountName" column="account_name"></result>
+	</resultMap>
+	<select id="userCount" parameterType="com.chen.imbot.usercenter.model.User" resultType="Integer">
+		select count(id) from user
+		<where>
+			<if test="accountName != null">
+				account_name = #{accountName}
+			</if>
+			<if test="encryptedPassword != null">
+				encrypted_password = #{encryptedPassword}
+			</if>
+		</where>
+	</select>
+	<select id="findUserById" resultType="com.chen.imbot.usercenter.model.User" resultMap="userResultMap">
+		select * from user where id = #{id}
+	</select>
+	<select id="findUserByAccName" resultType="com.chen.imbot.usercenter.model.User" resultMap="userResultMap">
+		select * from user where account_name = #{accountName}
+	</select>
+	<insert id="register" parameterType="com.chen.imbot.usercenter.model.User">
+		insert into user (account_name, encrypted_password) values (#{accountName}, #{encryptedPassword})
+	</insert>
 </mapper>
