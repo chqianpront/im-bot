@@ -7,4 +7,5 @@ public interface UserDao {
 	User findUserById(int userId);
 	int register(User user);
 	User findUserByAccName(String accountName);
+	User findUserByPass(User user);
 }

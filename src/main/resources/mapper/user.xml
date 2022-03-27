@@ -23,6 +23,9 @@
 	<select id="findUserByAccName" resultType="com.chen.imbot.usercenter.model.User" resultMap="userResultMap">
 		select * from user where account_name = #{accountName}
 	</select>
+	<select id="findUserByPass" resultType="com.chen.imbot.usercenter.model.User" resultMap="userResulltMap">
+		select * from user where encrypted_password = #{encryptedPassword} and user_id = #{userId} 
+	</select>
 	<insert id="register" parameterType="com.chen.imbot.usercenter.model.User">
 		insert into user (account_name, encrypted_password) values (#{accountName}, #{encryptedPassword})
 	</insert>

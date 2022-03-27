@@ -29,10 +29,10 @@ public class Login {
 		User user = new User();
 		user.setAccountName(accountName);
 		user.setEncryptedPassword(orgPassword);
-		boolean authRet = userService.authAccount(user);
+		User verifyUser = userService.login(null, user);
 		
 		UserReturn ret = new UserReturn();
-		if (authRet) {
+		if (verifyUser != null) {
 			ret.setCode(0);
 			ret.setUser(user);
 		} else {

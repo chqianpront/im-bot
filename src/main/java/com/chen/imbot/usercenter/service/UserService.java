@@ -21,10 +21,6 @@ public class UserService {
 	@Autowired
 	private UserDao userDao;
 	
-	public boolean authAccount(User user) {
-		int ret = userDao.userCount(user);
-		return ret == 1;
-	}
 	public User findUserById(int userId) {
 		return userDao.findUserById(userId);
 	}
@@ -38,6 +34,19 @@ public class UserService {
 		String encryptedPass = genPassword(orgPass);
 		user.setEncryptedPassword(encryptedPass);
 		return userDao.register(user);
+	}
+	public User login(Token token, User user) {
+		log.info("token: {}, user: {}", token, user);
+		User verifyUser = null;
+		if (token != null) {
+			verifyUser = verifyToken(token);
+			return verifyUser;
+		} else if (user != null) {
+			verifyUser = verifyPass(user);
+		} else {
+			log.info("lack of param");
+		}
+		return verifyUser;
 	}
 	public Token genToken(User user) {
 //		token gen method userId:random:expireTime
@@ -72,6 +81,12 @@ public class UserService {
 		}
 		int userId = Integer.valueOf(tArr[0]);
 		return findUserById(userId);
+	}
+	private User verifyPass(User user) {
+		Date now = new Date();
+		String encStr = genPassword(user.getEncryptedPassword());
+		user.setEncryptedPassword(encStr);
+		return userDao.findUserByPass(user);
 	}
 	private String genPassword(String orgPassword) {
 		try {

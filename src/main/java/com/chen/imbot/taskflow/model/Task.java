@@ -1,5 +1,18 @@
 package com.chen.imbot.taskflow.model;
 
-public class Task {
+import java.util.Date;
 
+import lombok.Data;
+
+@Data
+public class Task {
+	private int id;
+	private String name;
+	private int status;
+	private int taskGroupId;
+	private int flowId;
+	private int creatorId;
+	private int assignUserId;
+	private Date createdAt;
+	private Date updatedAt;
 }
