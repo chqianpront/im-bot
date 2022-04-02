@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chen.imbot.basemodel.dto.UserToken;
 import com.chen.imbot.usercenter.model.User;
 import com.chen.imbot.usercenter.service.UserService;
 import com.chen.imbot.utils.BaseReturn;
@@ -29,12 +30,13 @@ public class Login {
 		User user = new User();
 		user.setAccountName(accountName);
 		user.setEncryptedPassword(orgPassword);
-		User verifyUser = userService.login(null, user);
+		UserToken verify = userService.login(null, user);
 		
 		UserReturn ret = new UserReturn();
-		if (verifyUser != null) {
+		if (verify != null) {
 			ret.setCode(0);
-			ret.setUser(user);
+			ret.setUser(verify.getUser());
+			ret.setToken(verify.getToken());
 		} else {
 			ret.setCode(-1);
 			ret.setMsg("user not found");
@@ -45,7 +47,7 @@ public class Login {
 	public BaseReturn registery(@RequestParam String accountName, @RequestParam String password) {
 		Object regRet = userService.register(accountName, password);
 		UserReturn ret = new UserReturn();
-		if (regRet.getClass().equals(User.class)) {
+		if (regRet != null && regRet.getClass().equals(User.class)) {
 			ret.setCode(0);
 			ret.setUser((User) regRet);
 		} else {

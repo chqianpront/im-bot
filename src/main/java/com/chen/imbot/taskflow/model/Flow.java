@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class Flow {
 	private int id;
-	private int name;
+	private String name;
 	private int teamId;
 	private int creatorId;
 	private int memberCount;

@@ -9,6 +9,8 @@ public class TaskGroup {
 	private int id;
 	private int name;
 	private int creatorId;
+	private int flowId;
+	private int order;
 	private Date createdAt;
 	private Date updatedAt;
 }

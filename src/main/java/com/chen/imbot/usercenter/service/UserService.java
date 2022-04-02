@@ -6,8 +6,11 @@ import java.util.Date;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.util.ByteUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
+import com.chen.imbot.basemodel.dto.UserToken;
 import com.chen.imbot.usercenter.dao.UserDao;
 import com.chen.imbot.usercenter.model.Token;
 import com.chen.imbot.usercenter.model.User;
@@ -35,18 +38,26 @@ public class UserService {
 		user.setEncryptedPassword(encryptedPass);
 		return userDao.register(user);
 	}
-	public User login(Token token, User user) {
+	public UserToken login(Token token, User user) {
 		log.info("token: {}, user: {}", token, user);
+		Token verifyToken = new Token();
 		User verifyUser = null;
+		UserToken userToken = null;
 		if (token != null) {
-			verifyUser = verifyToken(token);
-			return verifyUser;
+			verifyUser = verifyToken(token.getToken());
 		} else if (user != null) {
 			verifyUser = verifyPass(user);
 		} else {
 			log.info("lack of param");
 		}
-		return verifyUser;
+		if (verifyUser != null) {
+			userToken = new UserToken();
+			Token loginToken = genToken(verifyUser);
+			createOrUpdateToken(loginToken);
+			userToken.setToken(loginToken);
+			userToken.setUser(verifyUser);
+		}
+		return userToken;
 	}
 	public Token genToken(User user) {
 //		token gen method userId:random:expireTime
@@ -70,11 +81,11 @@ public class UserService {
 		token.setToken(CryptUtil.encrypted(tokenStr));
 		return token;
 	}
-	public User verifyToken(Token token) {
+	public User verifyToken(String token) {
 		if (token == null) return null;
-		String tokenStr = CryptUtil.decrypted(token.getToken());
+		String tokenStr = CryptUtil.decrypted(token);
 		String[] tArr = tokenStr.split(":");
-		Date expireDate = new Date(Integer.valueOf(tArr[2]));
+		Date expireDate = new Date(Long.parseLong(tArr[2]));
 		if (expireDate.before(new Date())) {
 			log.info("token :{} is expired", token);
 			return null;
@@ -90,12 +101,18 @@ public class UserService {
 	}
 	private String genPassword(String orgPassword) {
 		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] d = md.digest(orgPassword.getBytes());
-			return new String(d);
+			return DigestUtils.md5DigestAsHex(orgPassword.getBytes("utf-8"));
 		} catch (Exception e) {
 			log.error("error: {}", e.getMessage());
 			return null;
+		}
+	}
+	private void createOrUpdateToken(Token token) {
+		int tokenExitst = userDao.userTokenCount(token);
+		if (tokenExitst > 0) {
+			userDao.updateToken(token);
+		} else {
+			userDao.addToken(token);
 		}
 	}
 }

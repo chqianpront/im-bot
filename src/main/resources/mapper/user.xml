@@ -2,10 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.chen.imbot.usercenter.dao.UserDao">
-	<resultMap id="userResultMap" type="com.chen.imbot.usercenter.model.User">
+	<resultMap id="UserResultMap" type="com.chen.imbot.usercenter.model.User">
 		<id property="id" column="id"></id>
 		<result property="accountName" column="account_name"></result>
+		<result property="name" column="name"/>
+		<result property="created_at" column="createdAt" />
+		<result property="upated_at" column="upatedAt" />
 	</resultMap>
+	<sql id="userColumn">
+		id, name, account_name, created_at, updated_at
+	</sql>
 	<select id="userCount" parameterType="com.chen.imbot.usercenter.model.User" resultType="Integer">
 		select count(id) from user
 		<where>
@@ -17,16 +23,30 @@
 			</if>
 		</where>
 	</select>
-	<select id="findUserById" resultType="com.chen.imbot.usercenter.model.User" resultMap="userResultMap">
-		select * from user where id = #{id}
+	<select id="findUserById" parameterType="com.chen.imbot.usercenter.model.User" resultMap="UserResultMap">
+		select <include refid="userColumn"></include> from user where id = #{id}
 	</select>
-	<select id="findUserByAccName" resultType="com.chen.imbot.usercenter.model.User" resultMap="userResultMap">
-		select * from user where account_name = #{accountName}
+	<select id="findUserByAccName" parameterType="com.chen.imbot.usercenter.model.User" resultMap="UserResultMap">
+		select <include refid="userColumn"></include> from user where account_name = #{accountName}
 	</select>
-	<select id="findUserByPass" resultType="com.chen.imbot.usercenter.model.User" resultMap="userResulltMap">
-		select * from user where encrypted_password = #{encryptedPassword} and user_id = #{userId} 
+	<select id="findUserByPass" parameterType="com.chen.imbot.usercenter.model.User" resultMap="UserResultMap">
+		select <include refid="userColumn"></include> from user where encrypted_password = #{encryptedPassword} and account_name = #{accountName} 
 	</select>
 	<insert id="register" parameterType="com.chen.imbot.usercenter.model.User">
 		insert into user (account_name, encrypted_password) values (#{accountName}, #{encryptedPassword})
 	</insert>
+	<insert id="addToken" parameterType="com.chen.imbot.usercenter.model.Token">
+		insert into token (token, refresh_token, user_id, created_at, updated_at) values (#{token}, #{refreshToken}, #{userId}, #{createdAt}, #{updatedAt});
+	</insert>
+	<update id="updateToken" parameterType="com.chen.imbot.usercenter.model.Token">
+		update token set token = #{token}, refresh_token = #{refreshToken}, updated_at = #{updatedAt} where user_id = #{userId};
+	</update>
+	<select id="userTokenCount" parameterType="com.chen.imbot.usercenter.model.Token" resultType="Integer">
+		select count(id) from token
+		<where>
+			<if test="userId != null">
+				user_id = #{userId}
+			</if>
+		</where>
+	</select>
 </mapper>

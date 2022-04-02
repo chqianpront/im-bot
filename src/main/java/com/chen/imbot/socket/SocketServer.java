@@ -9,6 +9,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -29,11 +30,13 @@ public class SocketServer implements ApplicationRunner {
 	EventLoopGroup workerGroup;
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		log.info("starting socket server");
-		startServer();
+//		log.info("starting socket server");
+//		startServer();
 	}
 	public void startServer() throws Exception {
 		bootstrap = new ServerBootstrap();
+		bossGroup = new NioEventLoopGroup();
+		workerGroup = new NioEventLoopGroup(2);
 		bootstrap.group(bossGroup, workerGroup)
 		.channel(NioServerSocketChannel.class)
 		.childHandler(new ChannelInitializer<SocketChannel>() {

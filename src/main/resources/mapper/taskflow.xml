@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.chen.imbot.taskflow.dao.TaskFlowDao">
+	<sql id="TaskColumns">
+		name, creator_id, task_group_id, flow_id, assign_user_id, status, order, task_title, task_desc, task_start_time, task_end_time
+	</sql>
+	<sql id="FlowColumns">
+		name, team_id, creator_id
+	</sql>
+	<sql id="TaskGroupColumns">
+		name, flow_id, creator_id, order
+	</sql>
+	<sql id="TeamColumns">
+		name, team_id, creator_id
+	</sql>
+	<insert id="createTask" parameterType="com.chen.imbot.taskflow.model.Task">
+		insert into task (
+			<include refid="TaskColumns"></include>
+		) values (#{name}, #{creatorId}, #{taskGroupId}, #{flowId}, #{assignUserId}, #{status}, #{order}, #{taskTitle}, #{taskDesc}, #{taskStartTime}, #{taskEndTime});
+	</insert>
+	<insert id="createFlow" parameterType="com.chen.imbot.taskflow.model.Flow">
+		insert into flow (
+			<include refid="FlowColumns"></include>
+		) values (#{name}, #{teamId}, #{creatorId});
+	</insert>
+	<insert id="createTaskGroup" parameterType="com.chen.imbot.taskflow.model.TaskGroup">
+		insert into task_group (
+			<include refid="TaskGroupColumns"></include>
+		) values (#{name}, #{flowId}, #{creatorId}, #{order});
+	</insert>
+	<insert id="createTeam" parameterType="com.chen.imbot.taskflow.model.Team">
+		insert into team (
+			<include refid="TeamColumns"></include>
+		) values (#{name}, #{teamId}, #{creatorId});
+	</insert>
+</mapper>

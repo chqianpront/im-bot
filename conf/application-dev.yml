@@ -11,3 +11,4 @@ spring:
     password: minxing123
 mybatis:
   mapperLocations: classpath:mapper/*.xml
+  config-location: classpath:mybatis-conf.xml
