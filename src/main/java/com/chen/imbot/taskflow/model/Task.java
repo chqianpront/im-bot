@@ -13,6 +13,11 @@ public class Task {
 	private int flowId;
 	private int creatorId;
 	private int assignUserId;
+	private int taskOrder;
+	private String taskTitle;
+	private String taskDesc;
+	private Date taskStartTime;
+	private Date taskEndTime;
 	private Date createdAt;
 	private Date updatedAt;
 }

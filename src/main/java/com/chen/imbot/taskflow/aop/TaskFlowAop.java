@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.condition.RequestConditionHolder;
 import com.chen.imbot.usercenter.model.Token;
 import com.chen.imbot.usercenter.model.User;
 import com.chen.imbot.usercenter.service.UserService;
+import com.chen.imbot.utils.BaseReturn;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +30,7 @@ public class TaskFlowAop {
 	public final static String HEADER_TASKFLOW_TOKEN_STR = "CHEN_TASKFLOW_TOKEN";
 	@Autowired
 	private UserService userService;
-	@Pointcut("execution(public * com.chen.imbot.taskflow.api.FlowApi..*(..))")
+	@Pointcut("execution(public * com.chen.imbot.taskflow.api..*Api..*(..))")
 	public void taskflowPoint() {}
 	@Before("taskflowPoint()")
 	public void doBefore(JoinPoint joinPoint) {
@@ -68,6 +69,12 @@ public class TaskFlowAop {
 			args[0] = user;
 		} else {
 			log.error("not space set user");
+		}
+		if (user == null) {
+			BaseReturn ret = new BaseReturn();
+			log.info("no user info");
+			ret.setCode(BaseReturn.NOT_SIGNIN);
+			return ret;
 		}
 		return joinPoint.proceed(args);
 	}

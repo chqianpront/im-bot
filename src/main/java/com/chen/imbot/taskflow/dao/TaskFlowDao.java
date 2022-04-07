@@ -1,5 +1,8 @@
 package com.chen.imbot.taskflow.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.chen.imbot.taskflow.model.Flow;
 import com.chen.imbot.taskflow.model.Task;
 import com.chen.imbot.taskflow.model.TaskGroup;
@@ -14,4 +17,5 @@ public interface TaskFlowDao {
 	int updateFlow(Flow flow);
 	int updateTaskGroup(TaskGroup taskGroup);
 	int updateTeam(Team team);
+	List<Flow> listFlow(Map param);
 }

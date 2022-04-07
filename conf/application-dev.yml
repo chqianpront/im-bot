@@ -6,9 +6,11 @@ taskflow:
 
 spring:
   datasource:
-    url: jdbc:mysql://mysqlserver.com:3306/chen_dev?useUnicode=true
+    url: jdbc:mysql://mysqlserver.com:3306/chen_dev?useUnicode=true&autoReconnect=true&characterEncoding=UTF-8&allowMultiQueries=true
     username: esns
     password: minxing123
 mybatis:
   mapperLocations: classpath:mapper/*.xml
-  config-location: classpath:mybatis-conf.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    location: classpath:mybatis-conf.xml

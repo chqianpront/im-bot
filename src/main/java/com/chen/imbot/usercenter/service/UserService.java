@@ -84,6 +84,7 @@ public class UserService {
 	public User verifyToken(String token) {
 		if (token == null) return null;
 		String tokenStr = CryptUtil.decrypted(token);
+		if (tokenStr == null) return null;
 		String[] tArr = tokenStr.split(":");
 		Date expireDate = new Date(Long.parseLong(tArr[2]));
 		if (expireDate.before(new Date())) {
