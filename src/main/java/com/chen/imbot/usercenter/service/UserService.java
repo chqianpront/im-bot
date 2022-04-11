@@ -94,6 +94,11 @@ public class UserService {
 		int userId = Integer.valueOf(tArr[0]);
 		return findUserById(userId);
 	}
+	public boolean isLogin(User user) {
+		String token = userDao.userToken(user.getId());
+		User u = verifyToken(token);
+		return u.getId() == user.getId();
+	}
 	private User verifyPass(User user) {
 		Date now = new Date();
 		String encStr = genPassword(user.getEncryptedPassword());

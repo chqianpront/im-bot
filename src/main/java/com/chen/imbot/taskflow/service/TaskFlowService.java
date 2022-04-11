@@ -4,6 +4,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,10 @@ import com.chen.imbot.taskflow.model.Flow;
 import com.chen.imbot.taskflow.model.Task;
 import com.chen.imbot.taskflow.model.TaskGroup;
 import com.chen.imbot.taskflow.model.Team;
+import com.chen.imbot.usercenter.model.User;
+import com.chen.imbot.usercenter.service.UserService;
+import com.chen.imbot.utils.TaskAdapter;
+import com.chen.imbot.utils.TaskManager;
 import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class TaskFlowService {
+	@Autowired
+	private UserService userService;
 	@Autowired
 	private TaskFlowDao taskFlowDao;
 	public Task createTask(Task task) {
@@ -57,5 +64,27 @@ public class TaskFlowService {
 	}
 	public List<Flow> listFlow(Map param) {
 		return taskFlowDao.listFlow(param);
+	}
+	private List<User> loginUsers(List<User> users) {
+		List<User> lUers = new ArrayList<User>();
+		for (User user : users) {
+			if (userService.isLogin(user)) {
+				lUers.add(user);
+			}
+		}
+		return lUers;
+	}
+	public boolean pushToUser(Object obj, List<User> users) {
+		Gson gson = new Gson();
+		String messageStr = gson.toJson(obj);
+		List<User> lgUsers = loginUsers(users);
+		return TaskManager.offer(new TaskAdapter(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+			}
+		}));
+		
 	}
 }

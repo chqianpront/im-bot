@@ -46,6 +46,7 @@ public class SocketServer implements ApplicationRunner {
 				ch.pipeline().addLast(new StringDecoder());
 				ch.pipeline().addLast(new StringEncoder());
 				ch.pipeline().addLast(new ChannelHandler());
+				ch.pipeline().addLast(new ChannelWrite());
 			}
 		})
 		.childOption(ChannelOption.SO_KEEPALIVE, true);

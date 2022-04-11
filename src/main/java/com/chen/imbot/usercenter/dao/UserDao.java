@@ -12,4 +12,5 @@ public interface UserDao {
 	int addToken(Token token);
 	int updateToken(Token token);
 	int userTokenCount(Token token);
+	String userToken(Integer userId);
 }

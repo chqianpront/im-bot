@@ -11,5 +11,4 @@ public class ChannelHandler extends SimpleChannelInboundHandler<String> {
 	protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
 		log.info("receive message: {}", msg);
 	}
-
 }

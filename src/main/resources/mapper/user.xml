@@ -49,4 +49,7 @@
 			</if>
 		</where>
 	</select>
+	<select id="userToken" parameterType="Integer" resultType="String">
+		select token from user where user_id = #{id}
+	</select>
 </mapper>
