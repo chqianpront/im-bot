@@ -1,5 +1,7 @@
 package com.chen.imbot.usercenter.dao;
 
+import java.util.List;
+
 import com.chen.imbot.usercenter.model.Token;
 import com.chen.imbot.usercenter.model.User;
 
@@ -13,4 +15,7 @@ public interface UserDao {
 	int updateToken(Token token);
 	int userTokenCount(Token token);
 	String userToken(Integer userId);
+	List<String> userChannels(List<Integer> ids);
+	List<Integer> teamUserIds(Integer teamId);
+	List<Integer> flowUserIds(Integer flowId);
 }

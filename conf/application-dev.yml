@@ -3,6 +3,8 @@ server:
 taskflow:
   tcp:
     port: 5080
+  filesys:
+    rootpath: /home/chen/
 
 spring:
   datasource:

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.chen.imbot.filesys.dao.ImFileDao">
+	<sql id="file_columns">
+		file_size, file_name, file_path, deleted, creator_id, team_id, flow_id, task_id, created_at, updated_at
+	</sql>
+	<insert id="createFile" parameterType="com.chen.imbot.filesys.model.ImFile">
+		insert into im_file (<include refid="file_columns"></include>) values (#{fileSize}, #{fileName}, #{filePath}, #{deleted}, #{creatorId}, #{teamId}, #{flowId}, #{taskId}, #{createdAt}, #{updatedAt});
+	</insert>
+</mapper>

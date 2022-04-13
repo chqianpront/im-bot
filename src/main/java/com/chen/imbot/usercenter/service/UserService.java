@@ -1,8 +1,10 @@
 package com.chen.imbot.usercenter.service;
 
 import java.security.MessageDigest;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import com.chen.imbot.basemodel.dto.UserToken;
+import com.chen.imbot.socket.SocketServer;
 import com.chen.imbot.usercenter.dao.UserDao;
 import com.chen.imbot.usercenter.model.Token;
 import com.chen.imbot.usercenter.model.User;
 import com.chen.imbot.utils.CryptUtil;
 
+import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -120,5 +124,14 @@ public class UserService {
 		} else {
 			userDao.addToken(token);
 		}
+	}
+	public List<Channel> getChannels(List<User> users) {
+		List<String> chs = userDao.userChannels(users.stream().map(User::getId).toList());
+		return chs.stream().map(SocketServer.getInstance()::getChannel).toList();
+	}
+	public Channel getChannel(User user) {
+		List<String> chs = userDao.userChannels(Arrays.asList(user.getId()));
+		if (chs.size() > 0) return SocketServer.getInstance().getChannel(chs.get(0));
+		return null;
 	}
 }

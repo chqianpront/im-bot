@@ -52,4 +52,13 @@
 	<select id="userToken" parameterType="Integer" resultType="String">
 		select token from user where user_id = #{id}
 	</select>
+	<select id="userChannels" parameterType="Integer" resultType="String">
+		select user_channel from user where id in #{ids}
+	</select>
+	<select id="teamUserIds" parameterType="Integer" resultType="Integer">
+		select user_id from team_user where team_id = #{teamId}
+	</select>
+	<select id="flowUserIds" parameterType="Integer" resultType="Integer">
+		select user_id from flow_user where flow_id = #{flowId}
+	</select>
 </mapper>

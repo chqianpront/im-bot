@@ -1,9 +1,8 @@
-package com.chen.imbot.taskflow.aop;
+package com.chen.imbot.aop;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,9 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.mvc.condition.RequestConditionHolder;
 
-import com.chen.imbot.usercenter.model.Token;
 import com.chen.imbot.usercenter.model.User;
 import com.chen.imbot.usercenter.service.UserService;
 import com.chen.imbot.utils.BaseReturn;
@@ -26,18 +23,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @Aspect
-public class TaskFlowAop {
+public class ApiAop {
+
 	public final static String HEADER_TASKFLOW_TOKEN_STR = "CHEN_TASKFLOW_TOKEN";
 	@Autowired
 	private UserService userService;
-	@Pointcut("execution(public * com.chen.imbot.taskflow.api..*Api..*(..))")
-	public void taskflowPoint() {}
-	@Before("taskflowPoint()")
-	public void doBefore(JoinPoint joinPoint) {
-		log.info("before");
+	@Pointcut("execution(public * com.chen.imbot..*.api..*Api..*(..))")
+	public void NeedUserInfo() {}
+	@Pointcut("!execution(public * com.chen.imbot.usercenter.api..*Api..*(..))")
+	public void notNeedUserInfo() {}
+	@Pointcut("NeedUserInfo() && notNeedUserInfo()")
+	public void cutPoint() {}
+	@Before("cutPoint()")
+	public void cutLog() {
+		log.info("<========== class: {}, before ==============>", ApiAop.class);
 	}
-	@Around("taskflowPoint()")
+	@Around("cutPoint()")
 	public Object parseToken(ProceedingJoinPoint joinPoint) throws Throwable {
+		log.info("taskflow aop around");
 		String taskflowToken = "";
 //		将token解析为user 信息
 		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

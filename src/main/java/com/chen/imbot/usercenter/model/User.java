@@ -10,6 +10,7 @@ public class User {
 	private String name;
 	private String accountName;
 	private String encryptedPassword;
+	private String userChannel;
 	private Date createdAt;
 	private Date updatedAt;
 }
